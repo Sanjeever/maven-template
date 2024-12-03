@@ -27,8 +27,8 @@ COPY --from=builder /app/target/maven-template-1.0.1-jar-with-dependencies.jar /
 # 容器启动时运行该 JAR 文件
 ENTRYPOINT ["java", "-jar", "maven-template.jar"]
 
-# 暴露应用运行的端口（如果你的应用监听了端口，可以调整这个）
-#EXPOSE 8080
+# 暴露应用运行的端口
+EXPOSE 8080
 
 # 设置默认命令来启动容器
 CMD ["java", "-jar", "maven-template.jar"]
