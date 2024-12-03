@@ -1,5 +1,6 @@
 package top.sanjeev.utils;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,11 +18,10 @@ public class NumberUtils {
      * @param <T>     泛型类型，列表中元素的类型，必须实现Comparable接口
      * @param numbers 输入的列表，包含了可能的重复数字
      * @return 返回一个去除重复并按升序排序后的新列表
-     * @throws NullPointerException 如果输入的列表为null
      */
     public static <T extends Comparable<T>> List<T> removeDuplicatesAndSort(List<T> numbers) {
         if (numbers == null) {
-            throw new NullPointerException("输入的列表不能为 null");
+            return Collections.emptyList();
         }
         return numbers.stream()
             .distinct()
