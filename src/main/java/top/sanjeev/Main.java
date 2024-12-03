@@ -108,7 +108,7 @@ public class Main {
                     String line;
                     StringBuilder header = new StringBuilder();
                     while ((line = reader.readLine()) != null && !line.isEmpty()) {
-                        header.append(line).append("\r\n");
+                        header.append("\t").append(line).append("\r\n");
                     }
                     log.info("请求头: \n{}", header);
 
