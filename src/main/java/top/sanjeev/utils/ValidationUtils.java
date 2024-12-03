@@ -1,5 +1,8 @@
 package top.sanjeev.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -8,6 +11,7 @@ import java.util.regex.Pattern;
  * @version 1.0.0
  * @since 2024/12/3 11:22
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidationUtils {
 
     /**
