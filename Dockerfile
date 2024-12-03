@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y tzdata && \
 WORKDIR /app
 
 # 将构建好的 JAR 文件从 builder 镜像中复制到当前镜像
-COPY --from=builder /app/target/maven-template-1.0.1-jar-with-dependencies.jar /app/maven-template.jar
+COPY --from=builder /app/target/maven-template-1.0.2-jar-with-dependencies.jar /app/maven-template.jar
 
 # 容器启动时运行该 JAR 文件
 ENTRYPOINT ["java", "-jar", "maven-template.jar"]
