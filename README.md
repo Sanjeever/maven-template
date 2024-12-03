@@ -52,10 +52,10 @@ java -jar ./target/maven-template-1.0.1-jar-with-dependencies.jar
 docker build -t maven-template .
 ```
 
-在交互模式下运行容器
+运行容器
 
 ```bash
-docker run -it maven-template /bin/bash
+docker run --name maven-template -p 8080:8080 -d maven-template
 ```
 
 ### 代码格式化
