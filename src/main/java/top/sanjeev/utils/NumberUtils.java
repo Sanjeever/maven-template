@@ -24,9 +24,9 @@ public class NumberUtils {
             throw new NullPointerException("输入的列表不能为 null");
         }
         return numbers.stream()
-                .distinct()
-                .sorted(Comparator.nullsFirst(Comparable::compareTo))
-                .collect(Collectors.toList());
+            .distinct()
+            .sorted(Comparator.nullsFirst(Comparable::compareTo))
+            .collect(Collectors.toList());
     }
 
 }
