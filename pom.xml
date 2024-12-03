@@ -18,6 +18,7 @@
         <lombok.version>1.18.36</lombok.version>
         <junit.version>5.11.3</junit.version>
         <spotless.version>2.30.0</spotless.version>
+        <pmd.version>3.26.0</pmd.version>
         <surefire.version>3.5.2</surefire.version>
     </properties>
 
@@ -89,6 +90,45 @@
                         </eclipse>
                     </java>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>${pmd.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>pmd</goal> <!-- 执行 PMD 静态分析 -->
+                        </goals>
+                        <configuration>
+                            <!-- 配置 PMD 规则集 -->
+                            <rulesets>
+                                <!-- rulesets/java/quickstart.xml：适合快速开始的小型项目 -->
+                                <!-- rulesets/java/basic.xml：适用于常规项目 -->
+                                <!-- rulesets/java/codestyle.xml：代码风格相关的检查 -->
+                                <!-- rulesets/java/unusedcode.xml：用于检查代码中的未使用部分 -->
+                                <ruleset>rulesets/java/basic.xml</ruleset>
+                            </rulesets>
+                            <!-- 设置目标 JDK 版本 -->
+                            <targetJdk>1.8</targetJdk>
+                            <!-- 禁用源代码交叉引用（XRef）链接 -->
+                            <linksXRef>false</linksXRef>
+                            <!-- 设置报告输出格式为 HTML -->
+                            <reportFormat>html</reportFormat>
+                            <!-- 自定义报告输出目录 -->
+                            <outputDirectory>${project.build.directory}/pmd-reports</outputDirectory>
+                            <!-- 配置报告文件名 -->
+                            <reportFileName>pmd-report.html</reportFileName>
+                            <!-- 发现代码问题时构建是否失败 -->
+                            <failOnViolation>false</failOnViolation>
+                            <!-- 排除测试代码和生成代码 -->
+                            <excludes>
+                                <exclude>**/Test*.java</exclude>
+                                <exclude>**/generated/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <!-- 打包插件 -->
             <plugin>
