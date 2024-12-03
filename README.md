@@ -44,6 +44,20 @@ java -jar ./target/maven-template-1.0.0-jar-with-dependencies.jar
 
 来运行构建好的 jar 包
 
+### Docker 作法
+
+构建镜像
+
+```bash
+docker build -t maven-template .
+```
+
+在交互模式下运行容器
+
+```bash
+docker run -it maven-template /bin/bash
+```
+
 ### 代码格式化
 
 使用 Spotless 插件来确保代码风格的一致性
