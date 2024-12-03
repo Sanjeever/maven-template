@@ -2,6 +2,11 @@ package top.sanjeev;
 
 import cn.hutool.setting.dialect.Props;
 import lombok.extern.slf4j.Slf4j;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
+import oshi.hardware.GlobalMemory;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.util.FormatUtil;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -23,6 +28,7 @@ public class Main {
         log.info("Application Name: {}", name);
         log.info("Application Version: {}", version);
         logInfo();
+        logSystemInfo();
         startHttpServer(props.getInt("server.port"));
     }
 
@@ -84,6 +90,32 @@ public class Main {
     }
 
     /**
+     * 日志系统信息方法
+     * 此方法用于收集并记录当前系统的CPU和内存信息
+     */
+    private static void logSystemInfo() {
+        // 创建 SystemInfo 对象，获取系统信息
+        SystemInfo systemInfo = new SystemInfo();
+        HardwareAbstractionLayer hardware = systemInfo.getHardware();
+
+        // 获取并记录CPU信息
+        CentralProcessor centralProcessor = hardware.getProcessor();
+        String cpuModel = centralProcessor.getProcessorIdentifier().getName();
+        int cpuCores = centralProcessor.getLogicalProcessorCount();
+
+        // 获取并记录内存信息
+        GlobalMemory globalMemory = hardware.getMemory();
+        long totalMemory = globalMemory.getTotal();
+        long availableMemory = globalMemory.getAvailable();
+
+        // 输出信息到日志
+        log.info("CPU Model: {}", cpuModel);
+        log.info("CPU Cores: {}", cpuCores);
+        log.info("Total Memory: {}", FormatUtil.formatBytes(totalMemory));
+        log.info("Available Memory: {}", FormatUtil.formatBytes(availableMemory));
+    }
+
+    /**
      * 启动一个HTTP服务器，监听指定端口
      * 该服务器无限循环等待客户端连接，处理HTTP请求，并返回一个固定的HTML页面
      *
@@ -137,22 +169,13 @@ public class Main {
      */
     private static String indexResponse() {
         // 定义一个简单的 HTML 页面作为 HTTP 响应的正文
-        String htmlResponse = "<html>" +
-                "<head><title>My Simple HTTP Server</title></head>" +
-                "<body>" +
-                "<h1>Hello, World!</h1>" +
-                "<p>Welcome to my simple HTTP server!</p>" +
-                "</body>" +
-                "</html>";
+        String htmlResponse = "<html>" + "<head><title>My Simple HTTP Server</title></head>" + "<body>" + "<h1>Hello, World!</h1>" + "<p>Welcome to my simple HTTP server!</p>" + "</body>" + "</html>";
 
         // 构造 HTTP 响应
         // 包含状态行、内容类型、内容长度和空行作为响应头部
         // 然后附加 HTML 正文
-        String response = "HTTP/1.1 200 OK\r\n" +
-                "Content-Type: text/html; charset=UTF-8\r\n" +
-                "Content-Length: " + htmlResponse.length() + "\r\n" +
-                "\r\n" +
-                htmlResponse;
+        String response = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html; charset=UTF-8\r\n" + "Content-Length: " + htmlResponse
+            .length() + "\r\n" + "\r\n" + htmlResponse;
         return response;
     }
 

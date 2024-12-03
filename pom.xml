@@ -13,6 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hutool.version>5.8.34</hutool.version>
+        <oshi.version>6.6.5</oshi.version>
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <lombok.version>1.18.36</lombok.version>
@@ -28,6 +29,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+
+        <!-- OSHI 是一个基于 JNA（Java Native Access）的操作系统和硬件信息库 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>${oshi.version}</version>
         </dependency>
 
         <!-- SLF4J API 接口，用于记录日志，后端可以选择不同的日志实现 -->
