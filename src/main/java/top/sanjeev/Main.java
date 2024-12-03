@@ -1,5 +1,6 @@
 package top.sanjeev;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.setting.dialect.Props;
 import lombok.extern.slf4j.Slf4j;
 import oshi.SystemInfo;
@@ -144,8 +145,16 @@ public class Main {
                     }
                     log.info("请求头: \n{}", header);
 
+                    // 获取请求的路径（请求行中第一个单词之后的部分）
+                    String requestPath = requestLine.split(" ")[1];
+
                     // 返回一个 HTML 页面
-                    String response = indexResponse();
+                    String response;
+                    if ("/".equals(requestPath) || "/index".equals(requestPath) || "/index.html".equals(requestPath)) {
+                        response = indexResponse(); // 返回首页
+                    } else {
+                        response = notFoundResponse(); // 返回404页面
+                    }
 
                     // 向客户端发送响应
                     outputStream.write(response.getBytes(StandardCharsets.UTF_8));
@@ -169,12 +178,23 @@ public class Main {
      */
     private static String indexResponse() {
         // 定义一个简单的 HTML 页面作为 HTTP 响应的正文
-        String htmlResponse = "<html>" + "<head><title>My Simple HTTP Server</title></head>" + "<body>" + "<h1>Hello, World!</h1>" + "<p>Welcome to my simple HTTP server!</p>" + "</body>" + "</html>";
-
+        String htmlResponse = ResourceUtil.readUtf8Str("static/index.html");
         // 构造 HTTP 响应
         // 包含状态行、内容类型、内容长度和空行作为响应头部
         // 然后附加 HTML 正文
         String response = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html; charset=UTF-8\r\n" + "Content-Length: " + htmlResponse
+            .length() + "\r\n" + "\r\n" + htmlResponse;
+        return response;
+    }
+
+    /**
+     * 生成 404 错误页面的 HTTP 响应
+     *
+     * @return 返回一个包含 404 错误页面的 HTTP 响应字符串
+     */
+    private static String notFoundResponse() {
+        String htmlResponse = ResourceUtil.readUtf8Str("static/404.html");
+        String response = "HTTP/1.1 404 Not Found\r\n" + "Content-Type: text/html; charset=UTF-8\r\n" + "Content-Length: " + htmlResponse
             .length() + "\r\n" + "\r\n" + htmlResponse;
         return response;
     }
