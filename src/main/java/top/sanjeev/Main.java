@@ -1,6 +1,6 @@
 package top.sanjeev;
 
-import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.setting.dialect.Props;
 import lombok.extern.slf4j.Slf4j;
 import oshi.SystemInfo;
@@ -8,12 +8,12 @@ import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HardwareAbstractionLayer;
 import oshi.util.FormatUtil;
+import top.sanjeev.core.HttpServer;
 
-import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
 import java.nio.file.FileSystems;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Sanjeev
@@ -30,7 +30,12 @@ public class Main {
         log.info("Application Version: {}", version);
         logInfo();
         logSystemInfo();
-        startHttpServer(props.getInt("server.port"));
+        Map<String, String> router = MapUtil.builder(new HashMap<String, String>())
+                .put("/", "index.html")
+                .put("/index", "index.html")
+                .put("/index.html", "index.html")
+                .build();
+        HttpServer.start(props.getInt("server.port"), router);
     }
 
     /**
@@ -114,89 +119,6 @@ public class Main {
         log.info("CPU Cores: {}", cpuCores);
         log.info("Total Memory: {}", FormatUtil.formatBytes(totalMemory));
         log.info("Available Memory: {}", FormatUtil.formatBytes(availableMemory));
-    }
-
-    /**
-     * 启动一个HTTP服务器，监听指定端口
-     * 该服务器无限循环等待客户端连接，处理HTTP请求，并返回一个固定的HTML页面
-     *
-     * @param port 服务器监听的端口号
-     */
-    private static void startHttpServer(int port) {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            log.info("服务器启动，监听端口 {}", port);
-            while (true) {
-                // 接受客户端请求
-                try (Socket clientSocket = serverSocket.accept()) {
-                    // 获取客户端输入流
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    // 获取客户端输出流
-                    OutputStream outputStream = clientSocket.getOutputStream();
-
-                    // 读取请求的第一行（例如：GET / HTTP/1.1）
-                    String requestLine = reader.readLine();
-                    log.info("收到请求: {}", requestLine);
-
-                    // 忽略 HTTP 请求头部（这里只处理请求的第一行，实际应用中应完整解析头部）
-                    String line;
-                    StringBuilder header = new StringBuilder();
-                    while ((line = reader.readLine()) != null && !line.isEmpty()) {
-                        header.append("\t").append(line).append("\r\n");
-                    }
-                    log.info("请求头: \n{}", header);
-
-                    // 获取请求的路径（请求行中第一个单词之后的部分）
-                    String requestPath = requestLine.split(" ")[1];
-
-                    // 返回一个 HTML 页面
-                    String response;
-                    if ("/".equals(requestPath) || "/index".equals(requestPath) || "/index.html".equals(requestPath)) {
-                        response = indexResponse(); // 返回首页
-                    } else {
-                        response = notFoundResponse(); // 返回404页面
-                    }
-
-                    // 向客户端发送响应
-                    outputStream.write(response.getBytes(StandardCharsets.UTF_8));
-                    outputStream.flush();
-                } catch (IOException e) {
-                    log.error("处理请求时发生错误: ", e);
-                }
-            }
-        } catch (IOException e) {
-            log.error("服务器启动失败: ", e);
-        }
-    }
-
-    /**
-     * 生成首页的 HTTP 响应
-     * <p>
-     * 此方法构建一个简单的 HTTP 响应，其中包含一个 HTML 页面作为响应体
-     * 响应包括 HTTP 状态行、头部信息和一个简单的欢迎页面
-     *
-     * @return 返回一个包含 HTTP 响应的字符串
-     */
-    private static String indexResponse() {
-        // 定义一个简单的 HTML 页面作为 HTTP 响应的正文
-        String htmlResponse = ResourceUtil.readUtf8Str("static/index.html");
-        // 构造 HTTP 响应
-        // 包含状态行、内容类型、内容长度和空行作为响应头部
-        // 然后附加 HTML 正文
-        String response = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html; charset=UTF-8\r\n" + "Content-Length: " + htmlResponse
-            .length() + "\r\n" + "\r\n" + htmlResponse;
-        return response;
-    }
-
-    /**
-     * 生成 404 错误页面的 HTTP 响应
-     *
-     * @return 返回一个包含 404 错误页面的 HTTP 响应字符串
-     */
-    private static String notFoundResponse() {
-        String htmlResponse = ResourceUtil.readUtf8Str("static/404.html");
-        String response = "HTTP/1.1 404 Not Found\r\n" + "Content-Type: text/html; charset=UTF-8\r\n" + "Content-Length: " + htmlResponse
-            .length() + "\r\n" + "\r\n" + htmlResponse;
-        return response;
     }
 
 }
