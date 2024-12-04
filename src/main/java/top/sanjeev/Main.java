@@ -31,10 +31,10 @@ public class Main {
         logInfo();
         logSystemInfo();
         Map<String, String> router = MapUtil.builder(new HashMap<String, String>())
-                .put("/", "index.html")
-                .put("/index", "index.html")
-                .put("/index.html", "index.html")
-                .build();
+            .put("/", "index.html")
+            .put("/index", "index.html")
+            .put("/index.html", "index.html")
+            .build();
         HttpServer.start(props.getInt("server.port"), router);
     }
 

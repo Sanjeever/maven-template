@@ -75,10 +75,8 @@ public class HttpServer {
      * @throws IOException 如果在读取请求或发送响应时发生 I/O 错误。
      */
     private void handleClientRequest(Socket clientSocket, Map<String, String> router) throws IOException {
-        try (
-                BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                OutputStream outputStream = clientSocket.getOutputStream()
-        ) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            OutputStream outputStream = clientSocket.getOutputStream()) {
             // 读取请求行（例如："GET / HTTP/1.1"）
             String requestLine = reader.readLine();
             if (requestLine != null && !requestLine.isEmpty()) {
@@ -161,8 +159,8 @@ public class HttpServer {
      */
     private byte[] makeOkResponse(String resource) {
         String html = readStatic(resource);
-        String response = HTTP_200 + CONTENT_TYPE_HTML + "Content-Length: " + html.length() + LINE_SEPARATOR
-                + LINE_SEPARATOR + html;
+        String response = HTTP_200 + CONTENT_TYPE_HTML + "Content-Length: " + html
+            .length() + LINE_SEPARATOR + LINE_SEPARATOR + html;
         return response.getBytes(StandardCharsets.UTF_8);
     }
 
@@ -173,8 +171,8 @@ public class HttpServer {
      */
     private byte[] makeNotFoundResponse() {
         String html = readStatic("404.html");
-        String response = HTTP_404 + CONTENT_TYPE_HTML + "Content-Length: " + html.length() + LINE_SEPARATOR
-                + LINE_SEPARATOR + html;
+        String response = HTTP_404 + CONTENT_TYPE_HTML + "Content-Length: " + html
+            .length() + LINE_SEPARATOR + LINE_SEPARATOR + html;
         return response.getBytes(StandardCharsets.UTF_8);
     }
 }
