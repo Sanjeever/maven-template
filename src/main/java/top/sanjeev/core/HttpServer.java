@@ -1,8 +1,6 @@
 package top.sanjeev.core;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -13,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * 简单的 HTTP 服务器，用于根据预定义的路由提供静态文件服务。
@@ -27,15 +27,21 @@ import java.util.Map;
  * @since 2024/12/4
  */
 @Slf4j
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpServer {
 
     private static final String HTTP_200 = "HTTP/1.1 200 OK\r\n";
     private static final String HTTP_404 = "HTTP/1.1 404 Not Found\r\n";
     private static final String CONTENT_TYPE_HTML = "Content-Type: text/html; charset=UTF-8\r\n";
     private static final String LINE_SEPARATOR = "\r\n";
+    private static final int MAX_THREADS = 10;
 
     private final int port;
+    private final ExecutorService threadPool;
+
+    public HttpServer(int port) {
+        this.port = port;
+        this.threadPool = Executors.newFixedThreadPool(MAX_THREADS);
+    }
 
     /**
      * 启动 HTTP 服务器，监听指定端口并使用路由配置提供服务。
@@ -56,10 +62,18 @@ public class HttpServer {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             log.info("Server started, listening on port {}", port);
             while (true) {
-                try (Socket clientSocket = serverSocket.accept()) {
-                    handleClientRequest(clientSocket, router);
+                try {
+                    Socket clientSocket = serverSocket.accept();
+                    // 提交一个处理请求的任务到线程池
+                    threadPool.submit(() -> {
+                        try {
+                            handleClientRequest(clientSocket, router);
+                        } catch (IOException e) {
+                            log.error("Error handling client request: ", e);
+                        }
+                    });
                 } catch (IOException e) {
-                    log.error("Error handling client request: ", e);
+                    log.error("Error accepting client connection: ", e);
                 }
             }
         } catch (IOException e) {
@@ -96,6 +110,8 @@ public class HttpServer {
                 outputStream.write(makeNotFoundResponse());
                 outputStream.flush();
             }
+        } finally {
+            clientSocket.close();
         }
     }
 
