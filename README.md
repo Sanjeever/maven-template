@@ -1,74 +1,74 @@
-# Maven 模板项目
+# Maven Template Project
 
-欢迎使用 **Maven 模板** 项目！🚀
+Welcome to the **Maven Template** project! 🚀
 
-这是一个简单的 Maven 模板项目，帮助你快速开始 Java 开发。它包含了常用依赖库，如日志、测试和代码格式化等，并提供了一个开箱即用的
-Maven 项目结构。
+This is a simple Maven template project designed to help you quickly get started with Java development. It includes commonly used dependencies such as logging, testing, and code formatting tools, and provides an out-of-the-box Maven project structure.
 
-## 特性
+## README.md
+- en [English](README.md)
+- zh_CN [简体中文](README.zh_CN.md)
 
-- 支持 JDK 8 ☕️
-- 预配置的常用依赖：
-    - **Hutool**：一款流行的 Java 工具类库 🌟
-    - **SLF4J** 和 **Logback**：用于日志记录 📝
-    - **Lombok**：减少 Java 代码中的样板代码 ✂️
-    - **JUnit 5**：单元测试框架 ⚙️
-    - **Spotless**：保持代码风格一致性 💅
-- 使用镜像仓库快速获取依赖 🌐
+## Features
 
-## 快速开始
+- Supports JDK 8 ☕️
+- Pre-configured common dependencies:
+    - **Hutool**: A popular Java utility library 🌟
+    - **SLF4J** and **Logback**: For logging 📝
+    - **Lombok**: To reduce boilerplate code in Java ✂️
+    - **JUnit 5**: Unit testing framework ⚙️
+    - **Spotless**: Ensures code style consistency 💅
+- Fast dependency retrieval using mirror repositories 🌐
 
-### 前置条件
+## Quick Start
 
-确保你已经安装了以下软件：
+### Prerequisites
+
+Ensure that you have the following software installed:
 
 - [JDK 8](https://bell-sw.com/pages/downloads/#jdk-8-lts)
 - [Maven](https://maven.apache.org/install.html)
 
-### 打包项目
+### Build the Project
 
 ```bash
 mvn package
 ```
 
-执行后，会在 target 目录下生成两个 jar 包，一个是不带依赖的 jar 包，一个是后缀有 jar-with-dependencies 带有依赖的jar包，如
+After running this command, two JAR files will be generated in the target directory: one is a JAR without dependencies, and the other is a JAR with dependencies, e.g.,
 
 - maven-template-1.0.3.jar
 - maven-template-1.0.3-jar-with-dependencies.jar
 
-使用
+To run the built JAR file, use:
 
 ```bash
 java -jar ./target/maven-template-1.0.3-jar-with-dependencies.jar
 ```
+### Docker Usage
 
-来运行构建好的 jar 包
-
-### Docker 作法
-
-构建镜像
+Build the Docker image:
 
 ```bash
 docker build -t maven-template .
 ```
 
-运行容器
+Run the Docker container:
 
 ```bash
 docker run --name maven-template -p 8080:8080 -d maven-template
 ```
 
-### 代码格式化
+### Code Formatting
 
-使用 Spotless 插件来确保代码风格的一致性
+Use the Spotless plugin to ensure consistent code style.
 
-#### 检查代码格式
+#### Check Code Format
 
 ```bash
 mvn spotless:check
 ```
 
-#### 应用代码格式
+#### Apply Code Format
 
 ```bash
 mvn spotless:apply
