@@ -33,13 +33,13 @@ mvn package
 
 执行后，会在 target 目录下生成两个 jar 包，一个是不带依赖的 jar 包，一个是后缀有 jar-with-dependencies 带有依赖的jar包，如
 
-- maven-template-1.0.2.jar
-- maven-template-1.0.2-jar-with-dependencies.jar
+- maven-template-1.0.3.jar
+- maven-template-1.0.3-jar-with-dependencies.jar
 
 使用
 
 ```bash
-java -jar ./target/maven-template-1.0.2-jar-with-dependencies.jar
+java -jar ./target/maven-template-1.0.3-jar-with-dependencies.jar
 ```
 
 来运行构建好的 jar 包

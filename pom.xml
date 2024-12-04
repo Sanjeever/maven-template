@@ -6,7 +6,7 @@
 
     <groupId>top.sanjeev</groupId>
     <artifactId>maven-template</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
