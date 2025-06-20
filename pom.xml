@@ -19,7 +19,7 @@
         <lombok.version>1.18.36</lombok.version>
         <junit.version>5.11.3</junit.version>
         <spotless.version>2.44.5</spotless.version>
-        <surefire.version>3.5.2</surefire.version>
+        <surefire.version>3.5.3</surefire.version>
     </properties>
 
     <dependencies>
